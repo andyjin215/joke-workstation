@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src https://api.deepseek.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>设置 - 段子工作台</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="titlebar-drag">
+    <span class="app-title">Settings</span>
+  </div>
+
+  <!-- 浮动小精灵 -->
+  <div class="sprite-container">
+    <div class="sprite-glow"></div>
+    <img src="../assets/sprite.png" alt="小精灵">
+  </div>
+
+  <main class="settings-content">
+    <div class="settings-card">
+      <div class="settings-section">
+        <h3 class="settings-heading">
+          <span class="heading-emoji">🔑</span>
+          DeepSeek API 配置
+        </h3>
+        <p class="settings-desc">
+          仅使用 DeepSeek 官方 API，模型固定为 <code>deepseek-v4-flash</code>。
+          可在 <a href="https://platform.deepseek.com" target="_blank" rel="noopener noreferrer" class="settings-link">platform.deepseek.com</a> 获取 API Key。
+        </p>
+
+        <div class="form-group">
+          <label class="form-label">API Key</label>
+          <div class="password-input-wrapper">
+            <input type="password" id="apiKeyInput" class="form-input" placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxx">
+            <button class="btn-toggle-pw" id="btnTogglePw" title="显示/隐藏">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <div class="form-hint" id="keyStatus"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">模型</label>
+          <input type="text" class="form-input" value="deepseek-v4-flash" readonly>
+          <div class="form-hint">固定使用 deepseek-v4-flash，高效低成本</div>
+        </div>
+      </div>
+
+      <div class="settings-actions">
+        <button class="btn-primary" id="btnSave">
+          <span class="btn-icon">💾</span>
+          <span>保存设置</span>
+        </button>
+        <button class="btn-ghost" id="btnTest">
+          <span class="btn-icon">🧪</span>
+          <span>测试连接</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="settings-footer">
+      <p>段子工作台 v1.0.0</p>
+      <p>数据全部保存在本地，不会上传到任何第三方服务器</p>
+    </div>
+  </main>
+
+  <script src="js/settings.js"></script>
+</body>
+</html>

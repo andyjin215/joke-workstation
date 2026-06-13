@@ -1,0 +1,77 @@
+{
+  "name": "joke-workstation",
+  "version": "1.0.0",
+  "description": "段子工作台 - 一键生成笑话脚本和Q版卡通提示词",
+  "main": "main.js",
+  "author": "andyjin215",
+  "license": "MIT",
+  "keywords": ["electron", "deepseek", "joke", "macos", "段子", "笑话", "ai"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andyjin215/joke-workstation.git"
+  },
+  "homepage": "https://github.com/andyjin215/joke-workstation#readme",
+  "bugs": {
+    "url": "https://github.com/andyjin215/joke-workstation/issues"
+  },
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --mac --universal",
+    "build:intel": "electron-builder --mac --x64",
+    "build:arm": "electron-builder --mac --arm64",
+    "build:win": "electron-builder --win --x64"
+  },
+  "dependencies": {
+    "electron-store": "^8.1.0"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.joke.workstation",
+    "productName": "段子工作台",
+    "mac": {
+      "category": "public.app-category.entertainment",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["universal"]
+        }
+      ],
+      "icon": "build/icon.icns",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false
+    },
+    "dmg": {
+      "title": "段子工作台",
+      "contents": [
+        { "x": 130, "y": 220 },
+        { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "段子工作台"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "assets/**/*",
+      "node_modules/**/*"
+    ]
+  }
+}

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src https://api.deepseek.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>段子工作台</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- macOS 标题栏拖拽区 -->
+  <div class="titlebar-drag">
+    <span class="app-title">段子工作台</span>
+    <button class="btn-settings" id="btnSettings" title="设置">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- 浮动小精灵 -->
+  <div class="sprite-container">
+    <div class="sprite-glow"></div>
+    <img src="../assets/sprite.png" alt="小精灵">
+  </div>
+
+  <!-- 主内容区 -->
+  <main class="main-content">
+    <!-- 输入区 -->
+    <section class="input-section">
+      <div class="input-group">
+        <label class="input-label">
+          <span class="label-emoji">🎭</span>
+          <span>输入段子主题</span>
+        </label>
+        <div class="input-row">
+          <input type="text" id="topicInput" class="topic-input" placeholder="例如：夫妻吵架、上班摸鱼、减肥失败..." autofocus>
+          <button class="btn-primary btn-generate" id="btnGenerate">
+            <span class="btn-icon">⚡</span>
+            <span class="btn-text">生成段子</span>
+          </button>
+        </div>
+        <div class="input-hint">每次生成 6 条笑话脚本，每条约 40 秒朗读时长</div>
+      </div>
+    </section>
+
+    <!-- Loading 状态 -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <p class="loading-text" id="loadingText">AI 正在创作段子...</p>
+        <div class="loading-progress">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <button class="btn-cancel" id="btnCancel">取消生成</button>
+      </div>
+    </div>
+
+    <!-- 结果区 - Tabs -->
+    <section class="result-section" id="resultSection">
+      <!-- 空状态（无段子时显示） -->
+      <div class="empty-joke-state" id="emptyJokeState">
+        <div class="empty-joke-icon">🎭</div>
+        <h3 class="empty-joke-title">还没有段子</h3>
+        <p class="empty-joke-desc">在上方输入一个主题，点击「生成段子」开始创作</p>
+        <div class="empty-joke-hints">
+          <span class="empty-hint-chip" data-topic="夫妻日常">夫妻日常</span>
+          <span class="empty-hint-chip" data-topic="上班摸鱼">上班摸鱼</span>
+          <span class="empty-hint-chip" data-topic="减肥失败">减肥失败</span>
+          <span class="empty-hint-chip" data-topic="带娃崩溃">带娃崩溃</span>
+        </div>
+      </div>
+
+      <!-- 有内容时显示 -->
+      <div class="result-content" id="resultContent" style="display:none;">
+        <!-- 当前主题 -->
+        <div class="result-header">
+          <h2 class="result-topic" id="resultTopic"></h2>
+          <div class="result-meta">
+            <span class="meta-time" id="resultTime"></span>
+            <button class="btn-icon-action" id="btnExport" title="导出 TXT">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              <span>导出</span>
+            </button>
+            <button class="btn-icon-action" id="btnCopyAll" title="全部复制">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              <span>复制全部</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab 切换 -->
+        <div class="tab-bar">
+          <button class="tab active" data-tab="scripts">
+            <span class="tab-emoji">📝</span> 笑话脚本
+            <span class="tab-count" id="scriptCount">0</span>
+          </button>
+          <button class="tab" data-tab="prompts">
+            <span class="tab-emoji">🎨</span> Q版提示词
+            <span class="tab-count" id="promptCount">0</span>
+          </button>
+          <button class="tab" data-tab="history">
+            <span class="tab-emoji">📚</span> 历史记录
+          </button>
+        </div>
+
+        <!-- 笑话脚本面板 -->
+        <div class="tab-panel active" id="panelScripts">
+          <div class="cards-grid" id="scriptsGrid"></div>
+          <button class="btn-secondary btn-generate-prompts" id="btnGenPrompts">
+            <span class="btn-icon">🎨</span>
+            <span>一键生成 Q 版卡通提示词</span>
+          </button>
+        </div>
+
+        <!-- 卡通提示词面板 -->
+        <div class="tab-panel" id="panelPrompts">
+          <div class="prompts-empty" id="promptsEmpty">
+            <p class="empty-emoji">🖌️</p>
+            <p class="empty-text">还没有生成提示词，点击「一键生成 Q 版卡通提示词」开始</p>
+          </div>
+          <div class="prompts-grid" id="promptsGrid"></div>
+        </div>
+
+        <!-- 历史记录面板 -->
+        <div class="tab-panel" id="panelHistory">
+          <div class="history-list" id="historyList"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast 提示 -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/renderer.js"></script>
+</body>
+</html>
