@@ -99,19 +99,7 @@ function createSettingsWindow() {
 }
 
 // ---- IPC Handlers ----
-
-ipcMain.handle('store:get', (event, key) => store.get(key));
-ipcMain.handle('store:set', (event, key, value) => store.set(key, value));
-
-ipcMain.handle('get-api-config', () => ({
-  apiKey: store.get('apiKey') || '',
-  baseUrl: store.get('baseUrl') || 'https://api.deepseek.com'
-}));
-
-ipcMain.handle('save-api-key', (event, key) => {
-  store.set('apiKey', key);
-  return true;
-});
+// 注意：依赖 store 的 handler 在 app.whenReady() 中 initStore() 之后注册
 
 // Save joke data to local file
 ipcMain.handle('save-joke', async (event, data) => {
@@ -223,6 +211,18 @@ ipcMain.handle('open-settings', () => {
 
 app.whenReady().then(() => {
   initStore();
+
+  // 注册依赖 store 的 IPC handlers（必须在 initStore 之后）
+  ipcMain.handle('store:get', (event, key) => store.get(key));
+  ipcMain.handle('store:set', (event, key, value) => store.set(key, value));
+  ipcMain.handle('get-api-config', () => ({
+    apiKey: store.get('apiKey') || '',
+    baseUrl: store.get('baseUrl') || 'https://api.deepseek.com'
+  }));
+  ipcMain.handle('save-api-key', (event, key) => {
+    store.set('apiKey', key);
+    return true;
+  });
 
   // macOS menu
   const template = [

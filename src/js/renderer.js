@@ -219,7 +219,9 @@ function parseJSON(text) {
   let fixed = jsonStr
     .replace(/,\s*]/g, ']')           // 尾部逗号
     .replace(/,\s*}/g, '}')           // 对象尾部逗号
-    .replace(/'/g, '"')               // 单引号 → 双引号
+    .replace(/([\s,:{\[])'|'([\s,:}\]])/g, (m, before, after) => {
+      return (before || '') + '"' + (after || '');
+    })                                             // 仅替换 JSON 边界处的单引号
     .replace(/[\u2018\u2019]/g, "'")  // 中文引号 → 英文
     .replace(/[\u201c\u201d]/g, '"')  // 中文双引号 → 英文
     .replace(/\n/g, '\\n')            // 裸换行符
