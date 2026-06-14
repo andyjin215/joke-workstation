@@ -31,8 +31,6 @@
   <img src="assets/screenshot.png" alt="段子工作台界面预览" width="800" />
 </p>
 
-> 首次运行后请截图替换 `assets/screenshot.png`，或移除此节。
-
 ## 技术栈
 
 | 组件 | 技术 |
@@ -127,7 +125,8 @@ joke-workstation/
 ├── preload.js              # 安全桥接层（contextBridge）
 ├── package.json            # 项目配置 + electron-builder 打包配置
 ├── assets/
-│   └── sprite.png          # 小精灵吉祥物
+│   ├── sprite.png          # 小精灵吉祥物
+│   └── screenshot.png      # 界面预览截图
 ├── build/
 │   ├── icon.icns           # macOS 应用图标
 │   └── icon.ico            # Windows 应用图标
